@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teaching Materials Dashboard</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f4f0fc; color: #333; min-height: 100vh; }
+
+header {
+  background: linear-gradient(135deg, #c8d8f8, #d8c8f8, #f0c8e8);
+  padding: 22px 24px 16px; text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+header h1 { font-size: 2em; color: #2a1a5a; }
+header p  { font-size: 0.9em; color: #6a5a9a; margin-top: 6px; font-style: italic; }
+
+.stats-bar {
+  display: flex; gap: 18px; flex-wrap: wrap;
+  background: #fff; padding: 10px 20px;
+  border-bottom: 1px solid #e0d8f4;
+  font-size: 0.82em; color: #666;
+}
+.stat-num { font-size: 1.15em; font-weight: bold; color: #4a3a7a; }
+
+.tab-bar {
+  display: flex; flex-wrap: wrap;
+  background: #fff; border-bottom: 3px solid #ccc0e8;
+  padding: 8px 14px 0; gap: 4px;
+}
+.tab-btn {
+  border: 2px solid #c0b0e0; border-bottom: none;
+  border-radius: 10px 10px 0 0; padding: 7px 16px;
+  cursor: pointer; font-family: inherit; font-size: 0.84em;
+  font-weight: bold; background: #f4f0fc; color: #555;
+  transition: all 0.15s;
+}
+.tab-btn:hover { background: #ede8fc; }
+.tab-btn.active { color: white; border-color: transparent; }
+.tab-btn .count {
+  display: inline-block; background: rgba(255,255,255,0.35);
+  border-radius: 10px; padding: 1px 7px; font-size: 0.82em; margin-left: 5px;
+}
+
+.toolbar {
+  display: flex; gap: 10px; align-items: center;
+  padding: 12px 20px; background: #fff;
+  border-bottom: 1px solid #e8e0f8; flex-wrap: wrap;
+}
+.search-box {
+  flex: 1; min-width: 180px; padding: 8px 14px;
+  border: 2px solid #c0b0e0; border-radius: 20px;
+  font-family: inherit; font-size: 0.9em; outline: none;
+}
+.search-box:focus { border-color: #9080c0; }
+.filter-btn {
+  padding: 7px 14px; border: 2px solid #c0b0e0; border-radius: 20px;
+  background: white; font-family: inherit; font-size: 0.82em;
+  cursor: pointer; transition: all 0.15s;
+}
+.filter-btn.active, .filter-btn:hover { background: #ede8fc; border-color: #9080c0; }
+
+.content { padding: 18px 20px; }
+
+table {
+  width: 100%; border-collapse: collapse;
+  background: white; border-radius: 12px;
+  overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  font-size: 0.88em;
+}
+th {
+  background: #2a1a5a; color: white; padding: 10px 12px;
+  text-align: left; font-weight: bold;
+}
+td { padding: 9px 12px; border-bottom: 1px solid #f0eaf8; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #faf8ff; }
+
+.type-badge {
+  display: inline-block; border-radius: 10px; padding: 2px 10px;
+  font-size: 0.8em; font-weight: bold; white-space: nowrap;
+}
+.type-html-teacher { background: #ffd6e0; color: #cc0044; border: 2px solid #ff8fab; }
+.type-html-share   { background: #e8d5ff; color: #6600cc; border: 2px solid #b088ff; }
+.type-form         { background: #d5f5e3; color: #006633; border: 2px solid #66bb6a; }
+.type-other        { background: #f0f0f0; color: #666666; border: 1px solid #cccccc; }
+
+.score-badge {
+  display: inline-block; border-radius: 10px; padding: 2px 10px;
+  font-size: 0.8em; font-weight: bold;
+}
+.score-yes { background: #e8f8e8; color: #006600; }
+.score-no  { background: #f8f0f0; color: #aa4444; }
+
+.link-btn {
+  display: inline-block; padding: 4px 10px; border-radius: 10px;
+  font-size: 0.8em; font-weight: bold; text-decoration: none;
+  border: 1px solid; cursor: pointer; margin: 2px 2px;
+  white-space: nowrap;
+}
+.link-sites { background: #ffd6e0; color: #cc0044; border-color: #ff8fab; }
+.link-share { background: #e8d5ff; color: #6600cc; border-color: #b088ff; }
+.link-none  { color: #aaa; font-size: 0.8em; }
+
+.empty-state {
+  text-align: center; padding: 40px; color: #aaa; font-size: 1.1em;
+}
+
+/* Tab colors */
+.tab-rtg   { background: #7c4dcc; }
+.tab-wtg   { background: #1976d2; }
+.tab-nda   { background: #c2185b; }
+.tab-ndp   { background: #2e7d32; }
+.tab-mind  { background: #e64a19; }
+.tab-gram  { background: #00838f; }
+.tab-other { background: #546e7a; }
+
+.row-rtg  td { border-left: 4px solid #7c4dcc; }
+.row-wtg  td { border-left: 4px solid #1976d2; }
+.row-nda  td { border-left: 4px solid #c2185b; }
+.row-ndp  td { border-left: 4px solid #2e7d32; }
+.row-mind td { border-left: 4px solid #e64a19; }
+.row-gram td { border-left: 4px solid #00838f; }
+.row-other td { border-left: 4px solid #546e7a; }
+
+.view-prompt-btn {
+  background: #f0e8ff; color: #6030a0; border: 1px solid #c0a0e0;
+  border-radius: 8px; padding: 3px 8px; font-size: 0.75em;
+  cursor: pointer; font-family: inherit; white-space: nowrap;
+}
+.view-prompt-btn:hover { background: #e0d0ff; }
+
+.modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: white; border-radius: 16px; padding: 24px;
+  max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.modal h3 { color: #2a1a5a; margin-bottom: 12px; }
+.modal pre {
+  background: #1e1e1e; color: #a8ff78; padding: 16px;
+  border-radius: 8px; font-size: 0.8em; white-space: pre-wrap;
+  word-break: break-word; max-height: 300px; overflow-y: auto;
+}
+.modal-close {
+  float: right; background: #ff6b6b; color: white; border: none;
+  border-radius: 8px; padding: 6px 12px; cursor: pointer; font-family: inherit;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Teaching Materials Dashboard</h1>
+  <p>Created by Debbie Mishol</p>
+</header>
+
+<div class="stats-bar" id="statsBar"></div>
+<div style="display:flex; gap:10px; flex-wrap:wrap; padding:8px 20px; background:#fff; border-bottom:1px solid #e8e0f8; font-size:0.8em; align-items:center;">
+  <span style="font-weight:bold; color:#555;">Types:</span>
+  <span style="background:#ffd6e0; color:#cc0044; padding:3px 12px; border-radius:10px; border:2px solid #ff8fab; font-weight:bold;">🔴 HTML – Teacher (only for me)</span>
+  <span style="background:#e8d5ff; color:#6600cc; padding:3px 12px; border-radius:10px; border:2px solid #b088ff; font-weight:bold;">🟣 HTML – Share (for colleagues)</span>
+  <span style="background:#d5f5e3; color:#006633; padding:3px 12px; border-radius:10px; border:2px solid #66bb6a; font-weight:bold;">🟢 Google Form</span>
+</div>
+
+<div class="tab-bar" id="tabBar"></div>
+
+<div class="toolbar">
+  <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search by title, unit, type..." oninput="renderTable()">
+  <button class="filter-btn" id="filterScore" onclick="toggleFilter('score')">✅ Has Scoring</button>
+  <button class="filter-btn" id="filterSites" onclick="toggleFilter('sites')">🌐 Has Sites Link</button>
+</div>
+
+<div class="content">
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Coursebook / Unit</th>
+        <th>Type</th>
+        <th>Scoring</th>
+        <th>Date</th>
+        <th>Links</th>
+        <th>Prompt</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<div class="modal-overlay" id="promptModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕ Close</button>
+    <h3 id="promptTitle"></h3>
+    <pre id="promptText"></pre>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const TABS = [
+  { id: "rtg",   label: "Ready to Go",         color: "tab-rtg"   },
+  { id: "wtg",   label: "Way to Go",            color: "tab-wtg"   },
+  { id: "nda",   label: "New Directions Alt",   color: "tab-nda"   },
+  { id: "ndp",   label: "New Directions Plus",  color: "tab-ndp"   },
+  { id: "mind",  label: "Mindset Plus",         color: "tab-mind"  },
+  { id: "gram",  label: "Grammar",              color: "tab-gram"  },
+  { id: "other", label: "Other / General",      color: "tab-other" },
+];
+
+const MATERIALS = [
+  // ── READY TO GO ──────────────────────────────
+  {
+    id: "rtg1",
+    title: "RTG Unit 1 – Short Vocabulary Worksheet",
+    coursebook: "Ready to Go – Unit 1",
+    tab: "rtg",
+    type: "HTML Interactive",
+    hasScoring: true,
+    sitesLink: "https://sites.google.com/view/ready-to-go-unit-1-worksheet-1/untitled-page_1",
+    shareLink: "",
+    date: "27/3/2026",
+    prompt: "Short RTG Unit 1 worksheet. Part A: 5 fill-in-the-blank sentences with shuffled word bank. Name required. Scoring → RTG Scores Google Sheet via Apps Script. No class field. Comic Sans, pastel, bilingual EN/HE."
+  },
+  {
+    id: "rtg2",
+    title: "RTG Unit 1 – AI Interactive Workbook",
+    coursebook: "Ready to Go – Unit 1",
+    tab: "rtg",
+    type: "HTML Interactive",
+    hasScoring: false,
+    sitesLink: "https://sites.google.com/view/ready-to-go-unit-1-worksheet-1/untitled-page",
+    shareLink: "",
+    date: "26/3/2026",
+    prompt: "Full RTG Unit 1 interactive workbook. A1 level. Parts A (fill-in), B (match Hebrew), C (translate with AI), D (write sentences with AI). Bilingual EN/HE. Comic Sans, pastel colors."
+  },
+  {
+    id: "rtg3",
+    title: "Ready to Go Unit 1 Grammar Form",
+    coursebook: "Ready to Go – Unit 1",
+    tab: "rtg",
+    type: "Google Form",
+    hasScoring: true,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "100pt Google Form. 3 sections: to be circle correct (34pts), am/is/are fill-in (34pts), have/has/don't/doesn't circle (32pts). Name only. Bilingual. Ref: Ready_to_Go_Workbook_p27"
+  },
+
+  // ── WAY TO GO ────────────────────────────────
+  {
+    id: "wtg1",
+    title: "Twin Towers Vocab Quiz v3",
+    coursebook: "Way to Go – Twin Towers Unit",
+    tab: "wtg",
+    type: "HTML Interactive",
+    hasScoring: false,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "3-Part Interactive Vocabulary Quiz. Comic Sans 14px; pastel; bilingual bold instructions; name field; Part 1=inline dropdown; Part 2=definition+chips; Part 3=newspaper gap-fill+chips; score%+screenshot msg; Teacher Key PIN 1234."
+  },
+  {
+    id: "wtg2",
+    title: "Twin Towers Full Review Quiz – All Dropdowns",
+    coursebook: "Way to Go – Twin Towers Unit",
+    tab: "wtg",
+    type: "HTML Interactive",
+    hasScoring: false,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "7 sections A–G all dropdowns. Options A→Z. Questions shuffled per section on load. Bilingual; Comic Sans; score+screenshot msg."
+  },
+  {
+    id: "wtg3",
+    title: "Twin Towers Vocabulary Quiz – Gemini Google Forms",
+    coursebook: "Way to Go – Twin Towers Unit",
+    tab: "wtg",
+    type: "Google Form",
+    hasScoring: true,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "For Gemini AI inside Google Forms. 15 MC sentences, 5 choices each (1 correct + 4 wrong). 100 points evenly distributed. Name only. Jumbled."
+  },
+  {
+    id: "wtg4",
+    title: "Free Sentence Writing – Google Form",
+    coursebook: "Way to Go – Twin Towers Unit",
+    tab: "wtg",
+    type: "Google Form",
+    hasScoring: false,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "Name + Class fields. Bilingual. 10 words as paragraph items (not required). Students choose 4 to write sentences."
+  },
+
+  // ── NEW DIRECTIONS ALT ────────────────────────
+  {
+    id: "nda1",
+    title: "NDA Unit 2 Vocabulary Sentence Dropdown",
+    coursebook: "New Directions Alt – Unit 2",
+    tab: "nda",
+    type: "Google Form",
+    hasScoring: true,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "Apps Script. Fixed-order word bank (EN/HE chart). Fisher-Yates shuffled sentences each run. Name/class fields, bilingual instructions."
+  },
+  {
+    id: "nda2",
+    title: "NDA Unit 3 – Vocabulary Choice Board",
+    coursebook: "New Directions Alt – Unit 3",
+    tab: "nda",
+    type: "HTML Interactive",
+    hasScoring: true,
+    sitesLink: "https://debbiebreit69-design.github.io/worksheets/nda-unit3-vocabulary-teacher.html",
+    shareLink: "https://debbiebreit69-design.github.io/worksheets/nda-unit3-vocabulary-share.html",
+    date: "07/4/2026",
+    prompt: "NDA Unit 3 vocab choice board. 4 sections: vocab match (24 words), true sentence (5Q), follow sentence (6Q), reading comprehension (5Q). Total 40pts. Collapsible EN/HE vocab reference list. Yellow highlights on key reading words. Apps Script → NDA Scores sheet. TEACHER + SHARE versions on GitHub."
+  },
+
+  // ── NEW DIRECTIONS PLUS ───────────────────────
+  {
+    id: "ndp1",
+    title: "Endangered Animal Research Card",
+    coursebook: "New Directions Plus – B1 Unit",
+    tab: "ndp",
+    type: "HTML + Google Form",
+    hasScoring: false,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "B1 unit. 3 outputs: live animal cameras Padlet HTML, research Google Form (5 Qs + speaking prep), research card .docx (colour-coded, bilingual, speaking frame table)."
+  },
+
+  // ── MINDSET PLUS ──────────────────────────────
+  {
+    id: "mind1",
+    title: "Wordwall Quiz Show – Complete the Sentence",
+    coursebook: "Mindset Plus – Vocabulary",
+    tab: "mind",
+    type: "Wordwall",
+    hasScoring: false,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "A2. 13 gap-fill sentences, 1 correct + 3 distractors from same word list. Shuffled. Words: accident, afraid, alive, as soon as, be able to, blood, character, hurt, impossible, prove, reach, reality, training."
+  },
+
+  // ── GRAMMAR ───────────────────────────────────
+  {
+    id: "gram1",
+    title: "Stative Verbs Student Self-Learning Guide",
+    coursebook: "Grammar – Stative Verbs",
+    tab: "gram",
+    type: "Word Document",
+    hasScoring: false,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "A2 level. Two-page bilingual guide. Page 1: guided questions for AI tool. Page 2: Gemini lesson page with ready-to-copy prompt. Arial font."
+  },
+  {
+    id: "gram2",
+    title: "Stative Verbs Presentation + Worksheet",
+    coursebook: "Grammar – Stative Verbs",
+    tab: "gram",
+    type: "PowerPoint + Word",
+    hasScoring: false,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "A2 level. 12-slide PPTX with body map visual. Accompanying .docx worksheet with 5 exercise types (word sort, circle, fill-in, match, free writing). Bilingual EN/HE."
+  },
+
+  // ── OTHER ─────────────────────────────────────
+  {
+    id: "other1",
+    title: "Multi-Level Exercise Generator",
+    coursebook: "General / Any",
+    tab: "other",
+    type: "HTML Interactive",
+    hasScoring: false,
+    sitesLink: "",
+    shareLink: "",
+    date: "2026",
+    prompt: "Offline HTML tool. Generates exercises at multiple CEFR levels from a word list. Dropdown selection, bilingual, Comic Sans."
+  },
+  {
+    id: "other2",
+    title: "Universal Score Collector – Apps Script",
+    coursebook: "General / All Books",
+    tab: "other",
+    type: "Google Form / Apps Script",
+    hasScoring: true,
+    sitesLink: "",
+    shareLink: "",
+    date: "27/3/2026",
+    prompt: "Universal Apps Script doPost. Auto-creates sheet tab per gameName. Headers: תאריך/שעה/שם תלמיד/שם משחק/נכון/סה\"כ/אחוז. Name required. Bold green header. doGet() confirmation."
+  },
+];
+
+// ===================== STATE =====================
+let activeTab = "rtg";
+let filterScore = false;
+let filterSites = false;
+
+// ===================== INIT =====================
+function init() {
+  buildTabs();
+  renderStats();
+  renderTable();
+}
+
+// ===================== TABS =====================
+function buildTabs() {
+  const bar = document.getElementById("tabBar");
+  bar.innerHTML = "";
+  TABS.forEach(t => {
+    const count = MATERIALS.filter(m => m.tab === t.id).length;
+    const btn = document.createElement("button");
+    btn.className = "tab-btn" + (t.id === activeTab ? " active " + t.color : "");
+    btn.innerHTML = `${t.label} <span class="count">${count}</span>`;
+    btn.onclick = () => { activeTab = t.id; buildTabs(); renderTable(); };
+    bar.appendChild(btn);
+  });
+}
+
+// ===================== STATS =====================
+function renderStats() {
+  const total = MATERIALS.length;
+  const withScoring = MATERIALS.filter(m => m.hasScoring).length;
+  const withSites = MATERIALS.filter(m => m.sitesLink).length;
+  document.getElementById("statsBar").innerHTML = `
+    <span class="stat-item">📚 Total Materials: <span class="stat-num">${total}</span></span>
+    <span class="stat-item">✅ With Scoring: <span class="stat-num">${withScoring}</span></span>
+    <span class="stat-item">🌐 On Google Sites: <span class="stat-num">${withSites}</span></span>
+  `;
+}
+
+// ===================== TABLE =====================
+function renderTable() {
+  const search = document.getElementById("searchBox").value.toLowerCase();
+  const tbody = document.getElementById("tableBody");
+
+  let rows = MATERIALS.filter(m => m.tab === activeTab);
+
+  if (search) {
+    rows = rows.filter(m =>
+      m.title.toLowerCase().includes(search) ||
+      m.coursebook.toLowerCase().includes(search) ||
+      m.type.toLowerCase().includes(search)
+    );
+  }
+  if (filterScore) rows = rows.filter(m => m.hasScoring);
+  if (filterSites) rows = rows.filter(m => m.sitesLink);
+
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No materials found 😊</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(m => {
+    let typeClass = "type-other";
+    let typeLabel = m.type;
+    if (m.hasScoring && m.type.includes("HTML")) { typeClass = "type-html-teacher"; typeLabel = "🔴 HTML – Teacher"; }
+    else if (!m.hasScoring && m.type.includes("HTML")) { typeClass = "type-html-share"; typeLabel = "🟣 HTML – Share"; }
+    else if (m.type.includes("Form") || m.type.includes("Script")) { typeClass = "type-form"; typeLabel = "🟢 Google Form"; }
+    const scoreClass = m.hasScoring ? "score-yes" : "score-no";
+    const scoreText = m.hasScoring ? "✅ Yes" : "❌ No";
+
+    const links = [];
+    if (m.sitesLink) links.push(`<a href="${m.sitesLink}" target="_blank" class="link-btn link-sites" style="font-size:0.85em; padding:5px 12px; font-weight:bold; display:block; margin-bottom:4px;">🔴 Teacher Version</a>`);
+    if (m.shareLink) links.push(`<a href="${m.shareLink}" target="_blank" class="link-btn link-share" style="font-size:0.85em; padding:5px 12px; font-weight:bold; display:block;">🟣 Share Version</a>`);
+    if (!m.sitesLink && !m.shareLink) links.push(`<span class="link-none">—</span>`);
+
+    return `<tr class="row-${m.tab}">
+      <td><strong>${m.title}</strong></td>
+      <td>${m.coursebook}</td>
+      <td><span class="type-badge ${typeClass}">${typeLabel}</span></td>
+      <td><span class="score-badge ${scoreClass}">${scoreText}</span></td>
+      <td>${m.date}</td>
+      <td>${links.join(" ")}</td>
+      <td>${m.prompt ? `<button class="view-prompt-btn" onclick="showPrompt('${m.id}')">View Prompt</button>` : "—"}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ===================== FILTERS =====================
+function toggleFilter(type) {
+  if (type === "score") {
+    filterScore = !filterScore;
+    document.getElementById("filterScore").classList.toggle("active", filterScore);
+  } else {
+    filterSites = !filterSites;
+    document.getElementById("filterSites").classList.toggle("active", filterSites);
+  }
+  renderTable();
+}
+
+// ===================== PROMPT MODAL =====================
+function showPrompt(id) {
+  const m = MATERIALS.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById("promptTitle").textContent = m.title;
+  document.getElementById("promptText").textContent = m.prompt || "No prompt saved.";
+  document.getElementById("promptModal").classList.add("show");
+}
+function closeModal() {
+  document.getElementById("promptModal").classList.remove("show");
+}
+
+// ===================== START =====================
+init();
+</script>
+</body>
+</html>
