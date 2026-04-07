@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adjectives – Choice Board | Ready to Go</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff; min-height: 100vh; color: #333; }
+
+.page-header { background: linear-gradient(135deg, #7c3aed, #2563eb, #059669); color: white; text-align: center; padding: 20px 16px 14px; border-radius: 0 0 24px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+.page-header h1 { font-size: 1.7em; }
+.page-header .sub { font-size: 0.88em; opacity: 0.9; margin-top: 3px; }
+.page-header .pages-tag { display: inline-block; background: rgba(255,255,255,0.28); border-radius: 20px; padding: 4px 16px; font-size: 0.85em; font-weight: bold; margin-top: 6px; }
+.page-header .meta { margin-top: 6px; }
+.page-header .author { display: inline-block; background: rgba(255,255,255,0.18); border-radius: 20px; padding: 3px 13px; font-size: 0.78em; }
+.page-header .book-tag { display: inline-block; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 3px 13px; font-size: 0.78em; margin-left: 5px; }
+
+.name-row { background: white; margin: 14px 16px; border-radius: 14px; padding: 12px 18px; border: 2px solid #c4b5fd; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.name-row label { font-weight: bold; color: #6d28d9; font-size: 0.95em; white-space: nowrap; }
+.name-row input { flex: 1; min-width: 180px; padding: 8px 14px; border: 2px solid #c4b5fd; border-radius: 20px; font-family: inherit; font-size: 0.95em; outline: none; }
+.name-row input:focus { border-color: #7c3aed; }
+#nameErr { color: #dc2626; font-size: 0.82em; display: none; }
+
+/* ── KEY WORDS BOX ── */
+.key-words-box {
+  margin: 0 16px 16px;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border: 3px solid #f59e0b;
+  border-radius: 18px;
+  padding: 16px 20px;
+}
+.key-words-box h3 { color: #92400e; font-size: 1em; margin-bottom: 12px; }
+.key-words-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+@media (max-width: 500px) { .key-words-grid { grid-template-columns: repeat(2, 1fr); } }
+.kw-item {
+  background: white; border-radius: 12px; padding: 10px 12px;
+  border: 2px solid #fcd34d; text-align: center;
+}
+.kw-item .kw-en { font-size: 1em; font-weight: bold; color: #1e3a5f; }
+.kw-item .kw-he { font-size: 0.85em; color: #7c3aed; margin-top: 3px; direction: rtl; }
+.kw-item .kw-ar { font-size: 0.78em; color: #888; margin-top: 2px; direction: rtl; }
+
+/* ── VOCAB MATCHING (TOP) ── */
+.vocab-full { margin: 0 16px 16px; }
+.card-match { background: #fff8f0; border: 3px solid #d97706; border-radius: 18px; padding: 18px; }
+.card-match .card-title { font-size: 1.1em; font-weight: bold; color: #92400e; margin-bottom: 4px; }
+.card-match .card-heb { font-size: 0.82em; color: #888; direction: rtl; text-align: right; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid rgba(0,0,0,0.07); }
+.vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 640px) { .vocab-grid { grid-template-columns: 1fr; } }
+
+.match-section { background: white; border-radius: 12px; padding: 14px 16px; border: 2px solid #fde68a; }
+.match-section-title { font-size: 0.88em; font-weight: bold; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dashed #fcd34d; }
+.match-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.match-en { font-weight: bold; font-size: 0.95em; color: #1e3a5f; min-width: 100px; }
+.match-arrow { color: #bbb; }
+
+/* ── THE SELECT BOX ── */
+.match-sel {
+  padding: 6px 8px;
+  border: 2px solid #fcd34d;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.9em;
+  background: #fffbeb;
+  cursor: pointer;
+  min-width: 115px;
+  direction: rtl;
+  text-align: right;
+  appearance: auto;
+}
+.match-sel:focus { outline: none; border-color: #d97706; }
+.match-sel.correct { border-color: #16a34a; background: #dcfce7; color: #166534; font-weight: bold; }
+.match-sel.wrong   { border-color: #dc2626; background: #fee2e2; color: #991b1b; }
+.match-sel:disabled { cursor: default; opacity: 0.9; }
+
+/* ── 2x2 GRID ── */
+.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0 16px 16px; }
+@media (max-width: 640px) { .choice-grid { grid-template-columns: 1fr; } }
+
+.card { border-radius: 18px; padding: 18px; border: 3px solid; }
+.card-gram  { background: #faf5ff; border-color: #7c3aed; }
+.card-vocab { background: #eff6ff; border-color: #2563eb; }
+.card-read  { background: #fff7ed; border-color: #ea580c; }
+.card-write { background: #f0fdf4; border-color: #16a34a; }
+
+.card-title { font-size: 1.1em; font-weight: bold; margin-bottom: 4px; }
+.card-gram  .card-title { color: #6d28d9; }
+.card-vocab .card-title { color: #1d4ed8; }
+.card-read  .card-title { color: #9a3412; }
+.card-write .card-title { color: #166534; }
+.card-heb { font-size: 0.82em; color: #888; direction: rtl; text-align: right; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid rgba(0,0,0,0.07); }
+
+.passage { border-radius: 10px; padding: 13px 15px; margin-bottom: 12px; font-size: 0.92em; line-height: 1.9; }
+.card-gram  .passage { background: white; border-left: 4px solid #7c3aed; }
+.card-vocab .passage { background: white; border-left: 4px solid #2563eb; }
+.card-read  .passage { background: white; border-left: 4px solid #ea580c; }
+.kw  { color: #7c3aed; font-weight: bold; font-style: italic; }
+.kwb { color: #2563eb; font-weight: bold; font-style: italic; }
+
+.instr { font-size: 0.85em; color: #555; margin-bottom: 8px; }
+.instr-heb { font-size: 0.8em; color: #999; direction: rtl; text-align: right; margin-bottom: 10px; }
+.qbox { background: white; border-radius: 10px; padding: 10px 13px; margin-bottom: 9px; border: 1.5px solid rgba(0,0,0,0.08); }
+.qt   { font-size: 0.9em; margin-bottom: 6px; }
+.qnum { font-weight: bold; color: #666; }
+.read-sel {
+  padding: 7px 10px; border: 2px solid #c4b5fd; border-radius: 10px;
+  font-family: inherit; font-size: 0.88em; background: #faf5ff;
+  cursor: pointer; width: 100%; max-width: 320px; margin-top: 4px;
+  direction: ltr;
+}
+.read-sel:focus { outline: none; border-color: #7c3aed; }
+.read-sel.correct { border-color: #16a34a; background: #dcfce7; color: #166534; font-weight: bold; }
+.read-sel.wrong   { border-color: #dc2626; background: #fee2e2; color: #991b1b; }
+.read-sel:disabled { cursor: default; opacity: 0.9; }
+
+.check-btn { margin-top: 10px; padding: 8px 20px; border: none; border-radius: 20px; font-family: inherit; font-size: 0.88em; font-weight: bold; cursor: pointer; transition: opacity 0.15s; }
+.check-btn:hover { opacity: 0.88; }
+.btn-gram  { background: #7c3aed; color: white; }
+.btn-vocab { background: #2563eb; color: white; }
+.btn-read  { background: #ea580c; color: white; }
+.btn-write { background: #16a34a; color: white; }
+.btn-match { background: #d97706; color: white; }
+
+.sec-score { display: inline-block; margin-top: 8px; padding: 4px 14px; border-radius: 20px; font-weight: bold; font-size: 0.88em; background: white; border: 2px solid currentColor; }
+
+.example-box { background: white; border-radius: 10px; padding: 9px 13px; margin-bottom: 10px; border-left: 4px solid #16a34a; font-size: 0.88em; }
+.word-bank { background: white; border-radius: 10px; padding: 9px 13px; margin-bottom: 10px; border: 2px dashed #86efac; font-size: 0.83em; line-height: 1.8; }
+.word-bank strong { color: #166534; }
+.write-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.write-row span { font-weight: bold; color: #555; font-size: 0.9em; min-width: 20px; }
+.w-input { flex: 1; padding: 8px 13px; border: 2px solid #86efac; border-radius: 10px; font-family: inherit; font-size: 0.88em; }
+.w-input:focus { outline: none; border-color: #16a34a; }
+.ai-loading { color: #16a34a; font-size: 0.85em; margin-top: 8px; display: none; }
+.ai-box { background: #f0fdf4; border-radius: 10px; padding: 11px 14px; margin-top: 9px; font-size: 0.85em; border-left: 3px solid #16a34a; display: none; line-height: 1.7; }
+
+.submit-area { background: white; margin: 0 16px 24px; border-radius: 16px; padding: 18px; text-align: center; border: 2px solid #c4b5fd; }
+.submit-area h3 { color: #6d28d9; margin-bottom: 6px; }
+.submit-area p  { font-size: 0.85em; color: #888; margin-bottom: 10px; }
+.total-display  { font-size: 1.2em; font-weight: bold; color: #6d28d9; margin: 8px 0; }
+.submit-btn { padding: 12px 32px; background: #16a34a; color: white; border: none; border-radius: 24px; font-family: inherit; font-size: 1em; font-weight: bold; cursor: pointer; }
+.submit-btn:hover { background: #15803d; }
+#submitMsg { margin-top: 10px; font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="pages-tag">📄 Review: Pages 34–39</div>
+  <h1>📚 Adjectives – Choice Board</h1>
+  <div class="sub">תיאורים – לוח בחירה</div>
+  <div class="meta">
+    <span class="author">✨ Created by Debbie Mishol</span>
+    <span class="book-tag">📗 Ready to Go</span>
+  </div>
+</div>
+
+<!-- NAME -->
+<div class="name-row">
+  <label>👤 Name / שם:</label>
+  <input type="text" id="sName" placeholder="Write your name here / כתוב את שמך כאן" oninput="clearErr()">
+  <span id="nameErr">⚠️ Please write your name! / כתוב את שמך!</span>
+</div>
+
+<!-- KEY WORDS BOX -->
+<div class="key-words-box">
+  <h3>🔑 Key Words / מילות מפתח</h3>
+  <div class="key-words-grid">
+    <div class="kw-item">
+      <div class="kw-en">often</div>
+      <div class="kw-he">לעתים קרובות</div>
+    </div>
+    <div class="kw-item">
+      <div class="kw-en">noun</div>
+      <div class="kw-he">שם עצם</div>
+    </div>
+    <div class="kw-item">
+      <div class="kw-en">adjective</div>
+      <div class="kw-he">תואר שם</div>
+    </div>
+    <div class="kw-item">
+      <div class="kw-en">opposite</div>
+      <div class="kw-he">הפך / ניגוד</div>
+    </div>
+  </div>
+</div>
+
+<!-- VOCABULARY MATCHING (TOP) -->
+<div class="vocab-full">
+  <div class="card-match">
+    <div class="card-title">🔤 Vocabulary Match – English → Hebrew</div>
+    <div class="card-heb">התאם כל מילה לתרגומה. בחר מהרשימה.</div>
+    <div class="instr" style="margin-bottom:14px;">Select the correct Hebrew meaning for each English word. / בחר את התרגום הנכון לכל מילה.</div>
+    <div class="vocab-grid" id="vocabMatchGrid"></div>
+    <button class="check-btn btn-match" style="margin-top:6px;" onclick="checkAllMatch()">✅ Check All / בדוק הכל</button>
+    <div id="matchScore" class="sec-score" style="color:#d97706; display:none;"></div>
+  </div>
+</div>
+
+<!-- 2×2 CARDS -->
+<div class="choice-grid">
+
+  <!-- GRAMMAR -->
+  <div class="card card-gram">
+    <div class="card-title">📝 Grammar – Adjectives</div>
+    <div class="card-heb">דקדוק – תארי שם</div>
+    <div class="passage">
+      Peter has a <span class="kw">big</span> blue bike and a <span class="kw">small</span> brown box.
+      Vered has <span class="kw">long</span> brown hair and a <span class="kw">nice</span> pink hat.
+      Ben has a <span class="kw">cold</span> drink and a <span class="kw">huge</span> sandwich.
+      They are all <span class="kw">happy</span>!
+    </div>
+    <div class="instr">Read and choose the correct answer. / קרא ובחר.</div>
+    <div class="qbox" id="gq1"><div class="qt"><span class="qnum">1.</span> Peter has a bike. It is...</div><div class="opts" id="gq1-opts"></div></div>
+    <div class="qbox" id="gq2"><div class="qt"><span class="qnum">2.</span> The word <em>"long"</em> in "long brown hair" is...</div><div class="opts" id="gq2-opts"></div></div>
+    <div class="qbox" id="gq3"><div class="qt"><span class="qnum">3.</span> Vered has a hat. It is...</div><div class="opts" id="gq3-opts"></div></div>
+    <div class="qbox" id="gq4"><div class="qt"><span class="qnum">4.</span> Ben's sandwich is...</div><div class="opts" id="gq4-opts"></div></div>
+    <button class="check-btn btn-gram" onclick="checkSection('gram')">✅ Check Grammar</button>
+    <div id="gramScore" class="sec-score" style="color:#7c3aed; display:none;"></div>
+  </div>
+
+  <!-- VOCAB OPPOSITES -->
+  <div class="card card-vocab">
+    <div class="card-title">📖 Vocabulary – Opposites</div>
+    <div class="card-heb">אוצר מילים – הפכים</div>
+    <div class="passage">
+      The market is <span class="kwb">open</span> in the morning and <span class="kwb">closed</span> at night.
+      In the morning it is <span class="kwb">noisy</span> and <span class="kwb">full</span> of people.
+      The food lines <span style="font-size:0.82em; color:#2563eb; font-style:normal;">(טורים לאוכל)</span> are <span class="kwb">long</span>.
+      At night the market is <span class="kwb">quiet</span> and <span class="kwb">empty</span>.
+      The lines are <span class="kwb">short</span>.
+    </div>
+    <div class="instr">Read and choose the correct answer. / קרא ובחר.</div>
+    <div class="qbox" id="vq1"><div class="qt"><span class="qnum">1.</span> In the morning, the market is...</div><div class="opts" id="vq1-opts"></div></div>
+    <div class="qbox" id="vq2"><div class="qt"><span class="qnum">2.</span> At night, the market is...</div><div class="opts" id="vq2-opts"></div></div>
+    <div class="qbox" id="vq3"><div class="qt"><span class="qnum">3.</span> The opposite of <em>"noisy"</em> is...</div><div class="opts" id="vq3-opts"></div></div>
+    <div class="qbox" id="vq4"><div class="qt"><span class="qnum">4.</span> The food lines in the morning are long. At night they are...</div><div class="opts" id="vq4-opts"></div></div>
+    <button class="check-btn btn-vocab" onclick="checkSection('vocab')">✅ Check Vocabulary</button>
+    <div id="vocabScore" class="sec-score" style="color:#2563eb; display:none;"></div>
+  </div>
+
+  <!-- READING -->
+  <div class="card card-read">
+    <div class="card-title">🔍 Reading – Read and Choose</div>
+    <div class="card-heb">קריאה – קרא ובחר</div>
+    <div class="passage">
+      My friend <strong>Vered</strong> is <span class="kw">tall</span>. She has <span class="kw">long</span>, black hair.
+      She lives near a <span class="kw">quiet</span> market. At the market she often buys a
+      <span class="kw">cold</span> drink and a <span class="kw">big</span> sandwich.
+      Vered loves old songs from <span class="kw">the past</span>. She is very happy! 😊
+    </div>
+    <div class="instr">Choose the correct answer (a or b). / בחר את התשובה הנכונה.</div>
+    <div class="qbox" id="rq1"><div class="qt"><span class="qnum">1.</span> Vered is...</div><div class="opts" id="rq1-opts"></div></div>
+    <div class="qbox" id="rq2"><div class="qt"><span class="qnum">2.</span> Where does Vered live?</div><div class="opts" id="rq2-opts"></div></div>
+    <div class="qbox" id="rq3"><div class="qt"><span class="qnum">3.</span> What does Vered often buy?</div><div class="opts" id="rq3-opts"></div></div>
+    <div class="qbox" id="rq4"><div class="qt"><span class="qnum">4.</span> Vered loves...</div><div class="opts" id="rq4-opts"></div></div>
+    <button class="check-btn btn-read" onclick="checkSection('read')">✅ Check Reading</button>
+    <div id="readScore" class="sec-score" style="color:#ea580c; display:none;"></div>
+  </div>
+
+  <!-- WRITING -->
+  <div class="card card-write">
+    <div class="card-title">✏️ Writing – Translate to English</div>
+    <div class="card-heb">כתיבה – תרגם לאנגלית</div>
+    <div class="example-box">
+      <strong>דוגמה / Example:</strong><br>
+      לאדי יש שיער חום. → <em>Adi has brown hair.</em> ✅
+    </div>
+    <div class="instr-heb" style="margin-bottom:6px; font-size:0.88em; color:#166534;">קרא את המשפט בעברית וכתוב אותו באנגלית. השתמש בתיבת המילים!</div>
+    <div class="instr" style="margin-bottom:10px;">Read the Hebrew sentence and write it in English. Use the word box!</div>
+    <div class="word-bank">
+      <strong>Names / שמות:</strong> Adi · Vered · Ben · Peter<br>
+      <strong>Adjectives / תארים:</strong> big · blue · brown · cold · huge · old · pink · small<br>
+      <strong>Nouns / שמות עצם:</strong> bike · box · drink · eyes · hair · hat · sandwich · T-shirt
+    </div>
+
+    <div class="qbox">
+      <div class="qt" style="direction:rtl; text-align:right; color:#166534; font-size:1em; margin-bottom:6px;">לפיטר יש אופניים גדולים.</div>
+      <input type="text" class="w-input" id="w1" placeholder="Write in English...">
+    </div>
+    <div class="qbox">
+      <div class="qt" style="direction:rtl; text-align:right; color:#166534; font-size:1em; margin-bottom:6px;">לוורד יש כובע ורוד.</div>
+      <input type="text" class="w-input" id="w2" placeholder="Write in English...">
+    </div>
+    <div class="qbox">
+      <div class="qt" style="direction:rtl; text-align:right; color:#166634; font-size:1em; margin-bottom:6px;">לבן יש משקה קר.</div>
+      <input type="text" class="w-input" id="w3" placeholder="Write in English...">
+    </div>
+
+    <button class="check-btn btn-write" onclick="checkWriting()">🤖 Check with AI / בדוק עם AI</button>
+    <div class="ai-loading" id="aiLoad">⏳ AI is checking... / AI בודק...</div>
+    <div class="ai-box" id="aiBox"></div>
+  </div>
+
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-area">
+  <h3>🚀 Submit Your Work / שלח את העבודה שלך</h3>
+  <p>Press Check in every section first! / לחץ על Check בכל חלק!</p>
+  <div class="total-display" id="totalDisp"></div>
+  <button class="submit-btn" onclick="submitAll()">📤 Submit All / שלח הכל</button>
+  <div id="submitMsg"></div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxam8NUu56tNuMmEyjuqTHUtRCRcr9LL9J2iqWAZEi_25oI6jMYW1pnN4MqHDUj6n5f/exec";
+const GAME_NAME  = "RTG Adjectives Choice Board";
+const picked = {};
+const secScores = { gram:null, vocab:null, read:null, match:null };
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+// ── A/B SECTIONS ──
+const ALL_DATA = {
+  gram: [
+    {id:"gq1",correct:"big and blue",  wrong:"small and red" },
+    {id:"gq2",correct:"an adjective",  wrong:"a noun"        },
+    {id:"gq3",correct:"nice and pink", wrong:"big and blue"  },
+    {id:"gq4",correct:"huge",          wrong:"small"         },
+  ],
+  vocab: [
+    {id:"vq1",correct:"open and full",   wrong:"closed and empty"},
+    {id:"vq2",correct:"quiet and empty", wrong:"noisy and full"  },
+    {id:"vq3",correct:"quiet",           wrong:"closed"          },
+    {id:"vq4",correct:"short",           wrong:"open"            },
+  ],
+  read: [
+    {id:"rq1",correct:"tall",                            wrong:"short"                           },
+    {id:"rq2",correct:"near a quiet market",             wrong:"near a noisy school"             },
+    {id:"rq3",correct:"a cold drink and a big sandwich", wrong:"a hot drink and a small sandwich"},
+    {id:"rq4",correct:"old songs",                       wrong:"new songs"                       },
+  ],
+};
+
+function buildSection(key){
+  const labels=["a","b"];
+  ALL_DATA[key].forEach(q=>{
+    const c=document.getElementById(q.id+"-opts");
+    const sel=document.createElement("select");
+    sel.className="read-sel";
+    sel.id=q.id+"-sel";
+    sel.dataset.correct=q.correct;
+
+    // Empty first option
+    const ph=document.createElement("option");
+    ph.value=""; ph.textContent="";
+    sel.appendChild(ph);
+
+    // Shuffled a/b options
+    shuffle([{text:q.correct,ok:true},{text:q.wrong,ok:false}]).forEach((opt,i)=>{
+      const o=document.createElement("option");
+      o.value=opt.text;
+      o.textContent=labels[i]+". "+opt.text;
+      o.dataset.ok=opt.ok?"yes":"no";
+      sel.appendChild(o);
+    });
+    c.appendChild(sel);
+  });
+}
+
+function checkSection(key){
+  // Validate all questions answered
+  const unanswered=ALL_DATA[key].filter(q=>{
+    const sel=document.getElementById(q.id+"-sel");
+    return !sel||sel.value==="";
+  });
+  if(unanswered.length>0){
+    alert("⚠️ Please answer all "+ALL_DATA[key].length+" questions before checking!\nענה על כל השאלות לפני הבדיקה!");
+    return;
+  }
+  let correct=0;
+  ALL_DATA[key].forEach(q=>{
+    const sel=document.getElementById(q.id+"-sel");
+    sel.disabled=true;
+    if(sel.value===q.correct){sel.classList.add("correct");correct++;}
+    else sel.classList.add("wrong");
+  });
+  secScores[key]=correct;
+  const n=ALL_DATA[key].length;
+  const ids={gram:"gramScore",vocab:"vocabScore",read:"readScore"};
+  const labs={gram:"Grammar",vocab:"Vocabulary",read:"Reading"};
+  const el=document.getElementById(ids[key]);
+  el.style.display="inline-block";
+  el.textContent=labs[key]+": "+correct+"/"+n+" ✨";
+  updateTotal();
+}
+
+// ── VOCABULARY MATCHING ──
+const MATCH_SECTIONS = [
+  {
+    title:"Section A – Opposites 1 / הפכים א׳", color:"#7c3aed",
+    words:[
+      {en:"noisy",  he:"רועש"}, {en:"full",  he:"מלא"},
+      {en:"long",   he:"ארוך"}, {en:"quiet", he:"שקט"},
+      {en:"closed", he:"סגור"},
+    ]
+  },
+  {
+    title:"Section B – Opposites 2 / הפכים ב׳", color:"#2563eb",
+    words:[
+      {en:"empty", he:"ריק"  }, {en:"short", he:"קצר / נמוך"},
+      {en:"open",  he:"פתוח" }, {en:"huge",  he:"ענק" },
+      {en:"high",  he:"גבוה" },
+    ]
+  },
+  {
+    title:"Section C – Nouns & Verbs / שמות עצם ופעלים", color:"#059669",
+    words:[
+      {en:"building",  he:"בניין"}, {en:"market",   he:"שוק"  },
+      {en:"elephant",  he:"פיל"  }, {en:"mountain", he:"הר"   },
+      {en:"climb",     he:"לטפס" },
+    ]
+  },
+  {
+    title:"Section D – More Words / עוד מילים", color:"#ea580c",
+    words:[
+      {en:"especially", he:"במיוחד"}, {en:"million",  he:"מיליון"},
+      {en:"the past",   he:"העבר"      }, {en:"food",     he:"אוכל"      },
+      {en:"line",       he:"טור לאכול" },
+    ]
+  },
+];
+
+function buildMatchCard(){
+  const grid=document.getElementById("vocabMatchGrid");
+  MATCH_SECTIONS.forEach((sec,si)=>{
+    const div=document.createElement("div");
+    div.className="match-section";
+
+    const t=document.createElement("div");
+    t.className="match-section-title";
+    t.style.color=sec.color;
+    t.textContent=sec.title;
+    div.appendChild(t);
+
+    // Shuffle both the ROW ORDER and the Hebrew options pool
+    const shuffledWords = shuffle(sec.words);
+    const hePool = sec.words.map(w=>w.he);
+
+    shuffledWords.forEach((word,wi)=>{
+      const row=document.createElement("div");
+      row.className="match-row";
+
+      const en=document.createElement("span");
+      en.className="match-en";
+      en.textContent=word.en;
+
+      const arrow=document.createElement("span");
+      arrow.className="match-arrow";
+      arrow.textContent="→";
+
+      const sel=document.createElement("select");
+      sel.className="match-sel";
+      sel.id="ms_"+si+"_"+wi;
+      sel.dataset.correct=word.he;
+
+      // Empty first option (no text — clean look)
+      const ph=document.createElement("option");
+      ph.value=""; ph.textContent="";
+      sel.appendChild(ph);
+
+      // Shuffle Hebrew options independently for every single dropdown
+      shuffle(hePool).forEach(he=>{
+        const opt=document.createElement("option");
+        opt.value=he; opt.textContent=he;
+        sel.appendChild(opt);
+      });
+
+      row.appendChild(en);
+      row.appendChild(arrow);
+      row.appendChild(sel);
+      div.appendChild(row);
+    });
+
+    grid.appendChild(div);
+  });
+}
+
+function checkAllMatch(){
+  // Check all dropdowns have a value
+  let missing = 0;
+  MATCH_SECTIONS.forEach((sec,si)=>{
+    sec.words.forEach((_,wi)=>{
+      const sel=document.getElementById("ms_"+si+"_"+wi);
+      if(sel && sel.value==="") missing++;
+    });
+  });
+  if(missing > 0){
+    alert("⚠️ Please answer all " + missing + " remaining question(s) before checking!\nענה על כל השאלות לפני הבדיקה!");
+    return;
+  }
+  let correct=0, total=0;
+  MATCH_SECTIONS.forEach((sec,si)=>{
+    sec.words.forEach((_,wi)=>{
+      const sel=document.getElementById("ms_"+si+"_"+wi);
+      if(!sel) return;
+      sel.disabled=true; total++;
+      if(sel.value===sel.dataset.correct){sel.classList.add("correct");correct++;}
+      else sel.classList.add("wrong");
+    });
+  });
+  secScores.match=correct;
+  const el=document.getElementById("matchScore");
+  el.style.display="inline-block";
+  el.textContent="Vocabulary Match: "+correct+"/"+total+" ✨";
+  updateTotal();
+}
+
+// ── WRITING ──
+const HEBREW_SENTENCES = [
+  { he:"לפיטר יש אופניים גדולים.", expected:"Peter has a big bike." },
+  { he:"לוורד יש כובע ורוד.",      expected:"Vered has a pink hat."  },
+  { he:"לבן יש משקה קר.",          expected:"Ben has a cold drink."  },
+];
+
+async function checkWriting(){
+  const inputs = ["w1","w2","w3"].map(id=>document.getElementById(id).value.trim());
+  if(inputs.every(s=>s==="")){alert("!כתוב לפחות משפט אחד\nPlease write at least one sentence!");return;}
+  document.getElementById("aiLoad").style.display="block";
+  document.getElementById("aiBox").style.display="none";
+  const content = HEBREW_SENTENCES.map((s,i)=>
+    "משפט "+(i+1)+": בעברית: "+s.he+" | תרגום התלמיד: "+(inputs[i]||"(לא נענה)")
+  ).join("\n");
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",max_tokens:400,
+        system:`אתה מורה אנגלית שבודק תרגומים של תלמידים ישראלים מתחילים (גיל 12-14).
+התלמיד קיבל משפט בעברית וצריך לתרגם לאנגלית לפי הדפוס: [שם] has a [תואר] [שם עצם].
+שמות: Adi, Vered, Ben, Peter. תארים: big, blue, brown, cold, huge, old, pink, small. שמות עצם: bike, box, drink, eyes, hair, hat, sandwich, T-shirt.
+לכל משפט כתוב בעברית:
+- ✅ אם התרגום נכון – ציין מה עשה טוב.
+- ⚠️ אם חסרה המילה "a" – כתוב בדיוק: כתוב "a" לפני המילה [שם העצם הספציפי]. לדוגמה: כתוב "a" לפני המילה bike.
+- ⚠️ אם יש טעות אחרת – תן רמז קצר אחד בעברית שמסביר בדיוק מה חסר או שגוי.
+- אם לא נענה – כתוב "לא נענה".
+סיים עם משפט עידוד קצר בעברית (2-4 מילים בלבד).
+כתוב את כל התגובה בעברית בלבד.`,
+        messages:[{role:"user",content}]
+      })
+    });
+    const d=await r.json();
+    document.getElementById("aiLoad").style.display="none";
+    const box=document.getElementById("aiBox");
+    box.style.display="block";
+    box.innerHTML="🤖 <strong>AI Feedback:</strong><br>"+d.content[0].text.replace(/\n/g,"<br>");
+  }catch(e){
+    document.getElementById("aiLoad").style.display="none";
+    const box=document.getElementById("aiBox");
+    box.style.display="block";
+    let h="🤖 <strong>בדיקה עצמית:</strong><br>";
+    HEBREW_SENTENCES.forEach((s,i)=>{
+      const ans=(inputs[i]||"").toLowerCase().replace(/[.!?]/g,"");
+      const exp=s.expected.toLowerCase().replace(/[.!?]/g,"");
+      if(!inputs[i]){ h+="❓ משפט "+(i+1)+": לא נענה.<br>"; }
+      else if(ans===exp || ans===exp.replace("a ","")){ h+="✅ משפט "+(i+1)+": כל הכבוד! 👍<br>"; }
+      else { h+="⚠️ משפט "+(i+1)+": בדוק שוב – "+s.expected+"<br>"; }
+    });
+    box.innerHTML=h+"<br>💡 דוגמה: <strong>Adi has brown hair.</strong>";
+  }
+}
+
+// ── TOTAL & SUBMIT ──
+function updateTotal(){
+  const t=(secScores.gram??0)+(secScores.vocab??0)+(secScores.read??0)+(secScores.match??0);
+  document.getElementById("totalDisp").textContent="Total: "+t+"/32 — "+Math.round(t/32*100)+"% 🎉";
+}
+
+async function submitAll(){
+  const name=document.getElementById("sName").value.trim();
+  if(!name){document.getElementById("nameErr").style.display="inline";document.getElementById("sName").focus();return;}
+  const correct=(secScores.gram??0)+(secScores.vocab??0)+(secScores.read??0)+(secScores.match??0);
+  const msg=document.getElementById("submitMsg");
+  msg.style.color="#555";msg.textContent="⏳ Sending... / שולח...";
+  try{
+    await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({studentName:name,gameName:GAME_NAME,correct,total:32})});
+    msg.style.color="#16a34a";
+    msg.innerHTML="✅ <strong>Sent!</strong> "+name+": "+correct+"/32 ("+Math.round(correct/32*100)+"%) 🎊";
+  }catch(e){msg.style.color="#dc2626";msg.textContent="❌ Error. Try again.";}
+}
+
+function clearErr(){document.getElementById("nameErr").style.display="none";}
+
+// ── INIT ──
+buildSection("gram");
+buildSection("vocab");
+buildSection("read");
+buildMatchCard();
+updateTotal();
+</script>
+</body>
+</html>
