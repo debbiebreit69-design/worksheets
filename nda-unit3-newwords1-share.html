@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDA Unit 3 – New Words 1</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f0f8ff; min-height: 100vh; color: #333; }
+
+.page-header { background: linear-gradient(135deg, #1976d2, #1565c0, #7b1fa2); color: white; text-align: center; padding: 20px 16px 14px; border-radius: 0 0 24px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+.page-header h1 { font-size: 1.7em; }
+.page-header .sub { font-size: 0.88em; opacity: 0.9; margin-top: 3px; }
+.page-header .pages-tag { display: inline-block; background: rgba(255,255,255,0.28); border-radius: 20px; padding: 4px 16px; font-size: 0.85em; font-weight: bold; margin-top: 6px; }
+.page-header .meta { margin-top: 6px; }
+.page-header .author { display: inline-block; background: rgba(255,255,255,0.18); border-radius: 20px; padding: 3px 13px; font-size: 0.78em; }
+.page-header .book-tag { display: inline-block; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 3px 13px; font-size: 0.78em; margin-left: 5px; }
+
+.name-row { background: white; margin: 10px 16px; border-radius: 12px; padding: 8px 14px; border: 2px solid #d1c4e9; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.name-row label { font-weight: bold; color: #1976d2; font-size: 0.95em; white-space: nowrap; }
+.name-row input { padding: 5px 12px; border: 2px solid #d1c4e9; border-radius: 20px; font-family: inherit; font-size: 0.85em; outline: none; width: 150px; }
+.name-row input:focus { border-color: #1976d2; }
+#nameErr { color: #dc2626; font-size: 0.82em; display: none; }
+
+/* VOCAB LIST */
+.vocab-list-box { margin: 0 16px 16px; background: #f9fbe7; border-radius: 18px; border: 3px solid #c5e1a5; overflow: hidden; box-shadow: 0 2px 10px rgba(102,187,106,0.15); }
+.vocab-list-header { background: #c8e6c9; color: #2e7d32; padding: 12px 18px; }
+.vocab-list-header span { font-size: 1.05em; font-weight: bold; }
+.vocab-table-wrap { padding: 16px 18px; }
+.vocab-table-wrap table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+.vocab-table-wrap tr:nth-child(even) td { background: #e3f2fd; }
+.vocab-table-wrap td { padding: 6px 10px; }
+.vocab-table-wrap .td-en { font-weight: bold; color: #222; width: 50%; }
+.vocab-table-wrap .td-he { text-align: right; direction: rtl; color: #1976d2; font-weight: bold; }
+
+/* CARDS */
+.full-card { margin: 0 16px 16px; }
+.two-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0 16px 16px; }
+@media (max-width: 640px) { .two-grid { grid-template-columns: 1fr; } }
+
+.card { border-radius: 18px; padding: 18px; border: 3px solid; }
+.card-match { background: #e3f2fd; border-color: #1976d2; }
+.card-syn   { background: #f8f0ff; border-color: #e1bee7; }
+.card-opp   { background: #fff8f0; border-color: #ffccbc; }
+.card-true  { background: #e3f2fd; border-color: #1976d2; }
+
+.card-title { font-size: 1.05em; font-weight: bold; margin-bottom: 4px; }
+.card-match .card-title { color: #1565c0; }
+.card-syn   .card-title { color: #7b1fa2; }
+.card-opp   .card-title { color: #e64a19; }
+.card-true  .card-title { color: #1565c0; }
+.card-heb { font-size: 0.82em; color: #888; direction: rtl; text-align: right; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid rgba(0,0,0,0.07); }
+
+.instr { font-size: 0.85em; color: #444; margin-bottom: 10px; }
+.qbox { background: white; border-radius: 10px; padding: 10px 13px; margin-bottom: 9px; border: 1.5px solid rgba(0,0,0,0.08); }
+.qt { font-size: 0.9em; margin-bottom: 6px; }
+.qnum { font-weight: bold; color: #666; }
+.kw { color: #1976d2; font-weight: bold; font-style: italic; }
+
+.q-sel { padding: 6px 8px; border: 2px solid #d1c4e9; border-radius: 10px; font-family: inherit; font-size: 0.88em; background: #e3f2fd; cursor: pointer; width: 100%; max-width: 320px; margin-top: 4px; }
+.q-sel:focus { outline: none; border-color: #1976d2; }
+.q-sel.correct { border-color: #16a34a !important; background: #dcfce7 !important; color: #166534; font-weight: bold; }
+.q-sel.wrong   { border-color: #dc2626 !important; background: #fee2e2 !important; color: #991b1b; }
+.q-sel:disabled { cursor: default; opacity: 0.9; }
+
+.check-btn { margin-top: 12px; padding: 8px 20px; border: none; border-radius: 20px; font-family: inherit; font-size: 0.88em; font-weight: bold; cursor: pointer; transition: opacity 0.15s; }
+.check-btn:hover { opacity: 0.88; }
+.btn-match { background: #1976d2; color: white; }
+.btn-syn   { background: #7b1fa2; color: white; }
+.btn-opp   { background: #ffb74d; color: white; }
+.btn-true  { background: #1565c0; color: white; }
+
+.sec-score { display: inline-block; margin-top: 8px; padding: 4px 14px; border-radius: 20px; font-weight: bold; font-size: 0.88em; background: white; border: 2px solid currentColor; }
+
+.submit-area { background: #f9fbe7; margin: 0 16px 24px; border-radius: 16px; padding: 18px; text-align: center; border: 2px solid #c5e1a5; }
+.submit-area h3 { color: #2e7d32; margin-bottom: 6px; }
+.submit-area p { font-size: 0.85em; color: #888; margin-bottom: 10px; }
+.total-display { font-size: 1.2em; font-weight: bold; color: #2e7d32; margin: 8px 0; }
+.submit-btn { padding: 12px 32px; background: #1976d2; color: white; border: none; border-radius: 24px; font-family: inherit; font-size: 1em; font-weight: bold; cursor: pointer; }
+.submit-btn:hover { background: #1565c0; }
+#submitMsg { margin-top: 10px; font-size: 0.9em; }
+
+/* VOCAB MATCH */
+.vocab-match-box { margin: 0 16px 16px; background: #fff0ee; border-radius: 18px; border: 3px solid #ffb3a7; overflow: hidden; }
+.vocab-match-header { background: #ffd5cc; color: #c0392b; padding: 12px 18px; }
+.vocab-match-header span { font-size: 1.05em; font-weight: bold; }
+.vocab-match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 16px 18px; }
+@media (max-width: 600px) { .vocab-match-grid { grid-template-columns: 1fr; } }
+.vm-row { display: flex; align-items: center; gap: 8px; }
+.vm-en { font-weight: bold; color: #1e3a5f; min-width: 110px; font-size: 0.9em; }
+.vm-sel { padding: 5px 8px; border: 2px solid #ffb3a7; border-radius: 10px; font-family: inherit; font-size: 0.85em; background: #fff0ee; cursor: pointer; min-width: 130px; direction: rtl; text-align: right; }
+.vm-sel:focus { outline: none; border-color: #1976d2; }
+.vm-sel.correct { border-color: #16a34a; background: #dcfce7; color: #166534; font-weight: bold; }
+.vm-sel.wrong   { border-color: #dc2626; background: #fee2e2; color: #991b1b; }
+.vm-sel:disabled { cursor: default; opacity: 0.9; }
+
+/* STORY */
+.story-box { margin: 0 16px 16px; background: #f5f0ff; border-radius: 18px; border: 3px solid #d7c8f8; overflow: hidden; }
+.story-header { background: #e8d5ff; color: #4a148c; padding: 12px 18px; }
+.story-header span { font-size: 1.05em; font-weight: bold; }
+.story-passage { margin: 14px 18px; background: white; border-left: 4px solid #b39ddb; border-radius: 10px; padding: 14px 16px; font-size: 0.92em; line-height: 2; }
+.story-passage .kw { color: #1565c0; font-weight: bold; font-style: italic; }
+.story-qs { padding: 0 18px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 600px) { .story-qs { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="page-header" style="background: linear-gradient(135deg, #388e3c, #43a047, #66bb6a) !important; color: white !important;">
+  <div class="pages-tag">📄 Page 74 – New Words 1</div>
+  <h1>📚 New Words 1</h1>
+  <div class="sub">מילים חדשות 1</div>
+  <div class="meta">
+    <span class="author">✨ Created by Debbie Mishol</span>
+    <span class="book-tag">📘 New Directions Alternative – Unit 3</span>
+  </div>
+</div>
+
+<div class="name-row">
+  <label>👤</label>
+  <input type="text" id="sFirst" placeholder="First Name" oninput="clearErr()">
+  <input type="text" id="sLast" placeholder="Last Name" oninput="clearErr()">
+  <span id="nameErr" style="color:#dc2626; font-size:0.82em; display:none;">⚠️ Please write your name! / כתוב את שמך!</span>
+</div>
+
+<!-- VOCABULARY LIST -->
+<div class="vocab-list-box">
+  <div class="vocab-list-header">
+    <span>📖 New Words 1 – מילים חדשות 1 (Page 74)</span>
+  </div>
+  <div class="vocab-table-wrap">
+    <table>
+      <tr><td class="td-en">army</td><td class="td-he">צבא</td></tr>
+      <tr><td class="td-en">brave</td><td class="td-he">אמיץ</td></tr>
+      <tr><td class="td-en">contact (v)</td><td class="td-he">ליצור קשר</td></tr>
+      <tr><td class="td-en">continue</td><td class="td-he">להמשיך</td></tr>
+      <tr><td class="td-en">dangerous</td><td class="td-he">מסוכן</td></tr>
+      <tr><td class="td-en">ending</td><td class="td-he">סיום</td></tr>
+      <tr><td class="td-en">fresh air</td><td class="td-he">אוויר צח</td></tr>
+      <tr><td class="td-en">nearby</td><td class="td-he">קרוב</td></tr>
+      <tr><td class="td-en">realize</td><td class="td-he">להבין / להבחין</td></tr>
+      <tr><td class="td-en">rescue (n)</td><td class="td-he">הצלה</td></tr>
+      <tr><td class="td-en">soldier</td><td class="td-he">חייל</td></tr>
+      <tr><td class="td-en">team</td><td class="td-he">קבוצה / צוות</td></tr>
+      <tr><td class="td-en">worried</td><td class="td-he">מודאג</td></tr>
+    </table>
+  </div>
+</div>
+
+
+<!-- VOCAB MATCH -->
+<div class="vocab-match-box">
+  <div class="vocab-match-header">
+    <span>🔤 Vocabulary Match – English → Hebrew / התאם מילים</span>
+  </div>
+  <div style="padding:8px 18px 4px; font-size:0.85em; color:#c0392b;">Select the correct Hebrew meaning for each word. / בחר את התרגום הנכון לכל מילה.</div>
+  <div class="vocab-match-grid" id="vmGrid"></div>
+  <div style="padding:0 18px 16px;">
+    <button class="check-btn btn-match" onclick="checkVocabMatch()">✅ Check All / בדוק הכל</button>
+    <div id="vmScore" class="sec-score" style="color:#000; display:none;"></div>
+  </div>
+</div>
+
+<!-- SECTION A: SYNONYMS -->
+<div class="two-grid">
+  <div class="card card-syn">
+    <div class="card-title">🔗 B1 – Similar Meanings / מילים דומות</div>
+    <div class="card-heb">התאם כל מילה למילה בעלת משמעות דומה.</div>
+    <div class="instr">Match each word to a word with a similar meaning.</div>
+    <div class="qbox"><div class="qt"><span class="qnum">1.</span> <span class="kw">worried</span> →</div><div id="syn1-opts"></div></div>
+    <div class="qbox"><div class="qt"><span class="qnum">2.</span> <span class="kw">realize</span> →</div><div id="syn2-opts"></div></div>
+    <div class="qbox"><div class="qt"><span class="qnum">3.</span> <span class="kw">team</span> →</div><div id="syn3-opts"></div></div>
+    <div class="qbox"><div class="qt"><span class="qnum">4.</span> <span class="kw">contact</span> →</div><div id="syn4-opts"></div></div>
+    <button class="check-btn btn-syn" onclick="checkSection('syn')">✅ Check / בדוק</button>
+    <div id="synScore" class="sec-score" style="color:#7b1fa2; display:none;"></div>
+  </div>
+
+  <!-- SECTION B: OPPOSITES -->
+  <div class="card card-opp">
+    <div class="card-title">🔄 B2 – Opposites / הפכים</div>
+    <div class="card-heb">התאם כל מילה להפכה.</div>
+    <div class="instr">Match each word to its opposite.</div>
+    <div class="qbox"><div class="qt"><span class="qnum">1.</span> <span class="kw">continue</span> →</div><div id="opp1-opts"></div></div>
+    <div class="qbox"><div class="qt"><span class="qnum">2.</span> <span class="kw">ending</span> →</div><div id="opp2-opts"></div></div>
+    <div class="qbox"><div class="qt"><span class="qnum">3.</span> <span class="kw">nearby</span> →</div><div id="opp3-opts"></div></div>
+    <button class="check-btn btn-opp" onclick="checkSection('opp')">✅ Check / בדוק</button>
+    <div id="oppScore" class="sec-score" style="color:#ffa726; display:none;"></div>
+  </div>
+</div>
+
+<!-- SECTION C: TRUE SENTENCE -->
+<div class="full-card">
+  <div class="card card-true">
+    <div class="card-title">✅ C – Choose the True Sentence / בחר את המשפט הנכון</div>
+    <div class="card-heb">בחר את המשפט הנכון לכל מילה.</div>
+    <div class="instr">Choose the sentence that is true for each word. / בחר את המשפט הנכון.</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="qbox"><div class="qt"><span class="qnum">1.</span> <span class="kw">fresh air</span> —</div><div id="true1-opts"></div></div>
+      <div class="qbox"><div class="qt"><span class="qnum">2.</span> <span class="kw">brave</span> people —</div><div id="true2-opts"></div></div>
+      <div class="qbox"><div class="qt"><span class="qnum">3.</span> <span class="kw">soldiers</span> —</div><div id="true3-opts"></div></div>
+      <div class="qbox"><div class="qt"><span class="qnum">4.</span> <span class="kw">dangerous</span> animals —</div><div id="true4-opts"></div></div>
+      <div class="qbox"><div class="qt"><span class="qnum">5.</span> <span class="kw">army</span> —</div><div id="true5-opts"></div></div>
+      <div class="qbox"><div class="qt"><span class="qnum">6.</span> a <span class="kw">rescue</span> —</div><div id="true6-opts"></div></div>
+    </div>
+    <button class="check-btn btn-true" onclick="checkSection('true')">✅ Check / בדוק</button>
+    <div id="trueScore" class="sec-score" style="color:#000; display:none;"></div>
+  </div>
+</div>
+
+
+<!-- STORY -->
+<div class="story-box">
+  <div class="story-header">
+    <span>📖 Read and Choose / קרא ובחר</span>
+  </div>
+  <div class="story-passage">
+    Dan is a <span class="kw">soldier</span> in the <span class="kw">army</span>. One day, his <span class="kw">team</span> got a call. A child was lost near a <span class="kw">nearby</span> forest. It was a <span class="kw">dangerous</span> situation. Dan was <span class="kw">worried</span>, but he was also <span class="kw">brave</span>. He used his phone to <span class="kw">contact</span> his friends. They did not stop — they wanted to <span class="kw">continue</span> until the <span class="kw">ending</span> was happy. They went outside for some <span class="kw">fresh air</span> and kept looking. Finally, Dan <span class="kw">realized</span> where the child was. The <span class="kw">rescue</span> was a success! The child was safe. 😊
+  </div>
+  <div style="padding:0 18px 8px; font-size:0.85em; color:#4a148c;">Choose the correct answer. / בחר את התשובה הנכונה.</div>
+  <div class="story-qs">
+    <div class="qbox"><div class="qt"><span class="qnum">1.</span> Who is Dan?</div><div id="rq1-opts"></div></div>
+    <div class="qbox"><div class="qt"><span class="qnum">2.</span> What was the problem?</div><div id="rq2-opts"></div></div>
+    <div class="qbox"><div class="qt"><span class="qnum">3.</span> How did Dan feel?</div><div id="rq3-opts"></div></div>
+    <div class="qbox"><div class="qt"><span class="qnum">4.</span> How did Dan contact his friends?</div><div id="rq4-opts"></div></div>
+    <div class="qbox"><div class="qt"><span class="qnum">5.</span> Was the rescue successful?</div><div id="rq5-opts"></div></div>
+  </div>
+  <div style="padding:0 18px 16px;">
+    <button class="check-btn btn-match" onclick="checkSection('read')">✅ Check Reading / בדוק קריאה</button>
+    <div id="readScore" class="sec-score" style="color:#7b1fa2; display:none;"></div>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-area">
+  <h3>🚀 Submit Your Work / שלח את העבודה שלך</h3>
+  <p>Press Check in every section first! / לחץ על Check בכל חלק!</p>
+  <div class="total-display" id="totalDisp">Total: 0/13</div>
+  <button class="submit-btn" onclick="submitAll()">📤 Submit All / שלח הכל</button>
+  <div id="submitMsg"></div>
+</div>
+
+<script>
+const SCRIPT_URL = "";
+const GAME_NAME  = "NDA Unit 3 New Words 1";
+const secScores  = { vm:null, syn:null, opp:null, true:null, read:null };
+
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+const ALL_DATA = {
+  syn: [
+    {id:"syn1", correct:"afraid",     wrong:["call","understand","group"]},
+    {id:"syn2", correct:"understand", wrong:["afraid","call","group"]},
+    {id:"syn3", correct:"group",      wrong:["afraid","understand","call"]},
+    {id:"syn4", correct:"call",       wrong:["afraid","understand","group"]},
+  ],
+  opp: [
+    {id:"opp1", correct:"stop",       wrong:["beginning","far away"]},
+    {id:"opp2", correct:"beginning",  wrong:["stop","far away"]},
+    {id:"opp3", correct:"far away",   wrong:["stop","beginning"]},
+  ],
+  read: [
+    {id:"rq1", correct:"a soldier in the army",    wrong:"a student in school"},
+    {id:"rq2", correct:"a child was lost",          wrong:"a soldier was hurt"},
+    {id:"rq3", correct:"worried but brave",         wrong:"happy and relaxed"},
+    {id:"rq4", correct:"by phone",                  wrong:"by letter"},
+    {id:"rq5", correct:"yes, the child was safe",   wrong:"no, they didn't find him"},
+  ],
+  true: [
+    {id:"true1", correct:"People need it to breathe.",      wrong:"It costs a lot of money."},
+    {id:"true2", correct:"They aren't scared easily.",      wrong:"They are afraid of everything."},
+    {id:"true3", correct:"They work for their country.",    wrong:"They work from home."},
+    {id:"true4", correct:"You shouldn't try to touch them.",wrong:"You can keep them in your house."},
+    {id:"true5", correct:"Most countries have one.",        wrong:"Only small countries have it."},
+    {id:"true6", correct:"It's when you help someone.",     wrong:"It's when you go home."},
+  ],
+};
+
+function buildSection(key){
+  ALL_DATA[key].forEach(q=>{
+    const c = document.getElementById(q.id+"-opts");
+    if(!c) return;
+    const sel = document.createElement("select");
+    sel.className="q-sel"; sel.id=q.id+"-sel"; sel.dataset.correct=q.correct;
+    const ph=document.createElement("option"); ph.value=""; ph.textContent=""; sel.appendChild(ph);
+    let opts;
+    if(key==="syn" || key==="opp"){
+      opts = shuffle([q.correct,...q.wrong]);
+    } else if(key==="true"){
+      opts = shuffle([q.correct, q.wrong]);
+    } else {
+      opts = shuffle([q.correct, q.wrong]);
+    }
+    opts.forEach((opt,i)=>{
+      const o=document.createElement("option");
+      o.value=opt; o.textContent=(key==="true"||key==="read"?"ab"[i]+". ":"")+opt;
+      sel.appendChild(o);
+    });
+    c.appendChild(sel);
+  });
+}
+
+function checkSection(key){
+  const unanswered=ALL_DATA[key].filter(q=>{const s=document.getElementById(q.id+"-sel");return !s||s.value==="";});
+  if(unanswered.length>0){alert("⚠️ Please answer all questions!\nענה על כל השאלות!");return;}
+  let correct=0;
+  ALL_DATA[key].forEach(q=>{
+    const sel=document.getElementById(q.id+"-sel"); sel.disabled=true;
+    if(sel.value===q.correct){sel.classList.add("correct");correct++;}
+    else sel.classList.add("wrong");
+  });
+  secScores[key]=correct;
+  const n=ALL_DATA[key].length;
+  const ids={syn:"synScore",opp:"oppScore",true:"trueScore",read:"readScore"};
+  const labs={syn:"Similar Meanings",opp:"Opposites",true:"True Sentence",read:"Reading"};
+  const el=document.getElementById(ids[key]); el.style.display="inline-block";
+  el.textContent=labs[key]+": "+correct+"/"+n+" ✨";
+  updateTotal();
+}
+
+function updateTotal(){
+  const total=(secScores.vm??0)+(secScores.syn??0)+(secScores.opp??0)+(secScores.true??0)+(secScores.read??0);
+  const max=26;
+  document.getElementById("totalDisp").textContent="Total: "+total+"/"+max+" — "+Math.round(total/max*100)+"% 🎉";
+}
+
+async function submitAll(){
+  const name=(document.getElementById("sFirst").value.trim()+" "+document.getElementById("sLast").value.trim()).trim();
+  if(!name){document.getElementById("nameErr").style.display="inline";document.getElementById("sName").focus();return;}
+  const correct=(secScores.syn??0)+(secScores.opp??0)+(secScores.true??0);
+  const msg=document.getElementById("submitMsg");
+  msg.style.color="#555"; msg.textContent="Sending...";
+  try{
+    await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,gameName:GAME_NAME,correct,total:26})});
+    msg.style.color="#1976d2"; msg.innerHTML="✅ <strong>Sent!</strong> "+name+": "+correct+"/26 ("+Math.round(correct/26*100)+"%) 🎊";
+  }catch(e){msg.style.color="#dc2626";msg.textContent="Error. Try again.";}
+}
+
+function clearErr(){document.getElementById("nameErr").style.display="none";}
+
+
+// ── VOCAB MATCH ──
+const VM_WORDS = [
+  {en:"army",       he:"צבא"},
+  {en:"brave",      he:"אמיץ"},
+  {en:"contact (v)",he:"ליצור קשר"},
+  {en:"continue",   he:"להמשיך"},
+  {en:"dangerous",  he:"מסוכן"},
+  {en:"ending",     he:"סיום"},
+  {en:"fresh air",  he:"אוויר צח"},
+  {en:"nearby",     he:"קרוב"},
+  {en:"realize",    he:"להבין / להבחין"},
+  {en:"rescue (n)", he:"הצלה"},
+  {en:"soldier",    he:"חייל"},
+  {en:"team",       he:"קבוצה / צוות"},
+  {en:"worried",    he:"מודאג"},
+];
+const hePool = VM_WORDS.map(w=>w.he);
+
+function buildVocabMatch(){
+  const grid = document.getElementById("vmGrid");
+  shuffle(VM_WORDS).forEach((word,i)=>{
+    const row=document.createElement("div"); row.className="vm-row";
+    const en=document.createElement("span"); en.className="vm-en"; en.textContent=word.en;
+    const sel=document.createElement("select"); sel.className="vm-sel"; sel.id="vm_"+i; sel.dataset.correct=word.he;
+    const ph=document.createElement("option"); ph.value=""; ph.textContent=""; sel.appendChild(ph);
+    shuffle(hePool).forEach(he=>{const o=document.createElement("option");o.value=he;o.textContent=he;sel.appendChild(o);});
+    row.appendChild(en); row.appendChild(sel); grid.appendChild(row);
+  });
+}
+
+function checkVocabMatch(){
+  let missing=0;
+  for(let i=0;i<VM_WORDS.length;i++){const s=document.getElementById("vm_"+i);if(s&&s.value==="")missing++;}
+  if(missing>0){alert("Please answer all " + missing + " questions first!");return;}
+  let correct=0;
+  for(let i=0;i<VM_WORDS.length;i++){
+    const sel=document.getElementById("vm_"+i); sel.disabled=true;
+    if(sel.value===sel.dataset.correct){sel.classList.add("correct");correct++;}
+    else sel.classList.add("wrong");
+  }
+  secScores.vm=correct;
+  const el=document.getElementById("vmScore"); el.style.display="inline-block";
+  el.textContent="Vocabulary Match: "+correct+"/"+VM_WORDS.length+" ✨";
+  updateTotal();
+}
+
+buildVocabMatch();
+buildSection("syn");
+buildSection("opp");
+buildSection("true");
+buildSection("read");
+updateTotal();
+</script>
+</body>
+</html>
