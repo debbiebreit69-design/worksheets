@@ -6,7 +6,7 @@
 <title>Adjectives – Choice Board | Ready to Go</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff; min-height: 100vh; color: #333; }
+body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff; min-height: 100vh; color: #333; font-size: 18px; }
 
 .page-header { background: linear-gradient(135deg, #7c3aed, #2563eb, #059669); color: white; text-align: center; padding: 20px 16px 14px; border-radius: 0 0 24px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
 .page-header h1 { font-size: 1.7em; }
@@ -16,9 +16,9 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff;
 .page-header .author { display: inline-block; background: rgba(255,255,255,0.18); border-radius: 20px; padding: 3px 13px; font-size: 0.78em; }
 .page-header .book-tag { display: inline-block; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 3px 13px; font-size: 0.78em; margin-left: 5px; }
 
-.name-row { background: white; margin: 14px 16px; border-radius: 14px; padding: 12px 18px; border: 2px solid #c4b5fd; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.name-row { background: white; margin: 10px 16px; border-radius: 12px; padding: 8px 14px; border: 2px solid #c4b5fd; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .name-row label { font-weight: bold; color: #6d28d9; font-size: 0.95em; white-space: nowrap; }
-.name-row input { flex: 1; min-width: 180px; padding: 8px 14px; border: 2px solid #c4b5fd; border-radius: 20px; font-family: inherit; font-size: 0.95em; outline: none; }
+.name-row input { padding: 6px 12px; border: 2px solid #c4b5fd; border-radius: 20px; font-family: inherit; font-size: 0.85em; outline: none; width: 160px; }
 .name-row input:focus { border-color: #7c3aed; }
 #nameErr { color: #dc2626; font-size: 0.82em; display: none; }
 
@@ -57,14 +57,14 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff;
 
 /* ── THE SELECT BOX ── */
 .match-sel {
-  padding: 6px 8px;
+  padding: 10px 10px;
   border: 2px solid #fcd34d;
   border-radius: 10px;
   font-family: inherit;
-  font-size: 0.9em;
+  font-size: 1em;
   background: #fffbeb;
   cursor: pointer;
-  min-width: 115px;
+  min-width: 130px;
   direction: rtl;
   text-align: right;
   appearance: auto;
@@ -104,9 +104,9 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff;
 .qt   { font-size: 0.9em; margin-bottom: 6px; }
 .qnum { font-weight: bold; color: #666; }
 .read-sel {
-  padding: 7px 10px; border: 2px solid #c4b5fd; border-radius: 10px;
-  font-family: inherit; font-size: 0.88em; background: #faf5ff;
-  cursor: pointer; width: 100%; max-width: 320px; margin-top: 4px;
+  padding: 10px 12px; border: 2px solid #c4b5fd; border-radius: 10px;
+  font-family: inherit; font-size: 1em; background: #faf5ff;
+  cursor: pointer; width: 100%; max-width: 340px; margin-top: 6px;
   direction: ltr;
 }
 .read-sel:focus { outline: none; border-color: #7c3aed; }
@@ -141,6 +141,11 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff;
 .submit-btn { padding: 12px 32px; background: #16a34a; color: white; border: none; border-radius: 24px; font-family: inherit; font-size: 1em; font-weight: bold; cursor: pointer; }
 .submit-btn:hover { background: #15803d; }
 #submitMsg { margin-top: 10px; font-size: 0.9em; }
+
+.card-order { background: #fff7ed; border-color: #ea580c; }
+.card-order .card-title { color: #9a3412; }
+.order-pair { background: white; border-radius: 10px; padding: 10px 13px; margin-bottom: 9px; border: 1.5px solid rgba(0,0,0,0.08); }
+.order-pair .qt { font-size: 0.9em; margin-bottom: 6px; }
 </style>
 </head>
 <body>
@@ -158,62 +163,10 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff;
 
 <!-- NAME -->
 <div class="name-row">
-  <label>👤 Name / שם:</label>
-  <input type="text" id="sName" placeholder="Write your name here / כתוב את שמך כאן" oninput="clearErr()">
-  <span id="nameErr">⚠️ Please write your name! / כתוב את שמך!</span>
-</div>
-
-
-<!-- VOCABULARY REFERENCE LIST -->
-<div style="margin: 0 16px 16px; background: white; border-radius: 18px; border: 3px solid #7c3aed; overflow: hidden; box-shadow: 0 2px 10px rgba(124,58,237,0.10);">
-  <div style="background: linear-gradient(135deg, #7c3aed, #2563eb); color: white; padding: 12px 18px;">
-    <span style="font-size:1.05em; font-weight:bold;">📖 Vocabulary List – רשימת מילים</span>
-  </div>
-  <div style="padding: 16px 18px;">
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-      <div>
-        <div style="font-weight:bold; color:#7c3aed; margin-bottom:8px; font-size:0.9em; border-bottom:2px solid #c4b5fd; padding-bottom:4px;">🔤 Opposites 1 – הפכים א׳</div>
-        <table style="width:100%; border-collapse:collapse; font-size:0.88em;">
-          <tr style="background:#faf5ff;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">noisy</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">רועש</td></tr>
-          <tr><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">full</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">מלא</td></tr>
-          <tr style="background:#faf5ff;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">long</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">ארוך</td></tr>
-          <tr><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">quiet</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">שקט</td></tr>
-          <tr style="background:#faf5ff;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">closed</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">סגור</td></tr>
-        </table>
-      </div>
-      <div>
-        <div style="font-weight:bold; color:#2563eb; margin-bottom:8px; font-size:0.9em; border-bottom:2px solid #bfdbfe; padding-bottom:4px;">🔤 Opposites 2 – הפכים ב׳</div>
-        <table style="width:100%; border-collapse:collapse; font-size:0.88em;">
-          <tr style="background:#eff6ff;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">empty</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">ריק</td></tr>
-          <tr><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">short</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">קצר / נמוך</td></tr>
-          <tr style="background:#eff6ff;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">open</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">פתוח</td></tr>
-          <tr><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">huge</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">ענק</td></tr>
-          <tr style="background:#eff6ff;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">high</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">גבוה</td></tr>
-        </table>
-      </div>
-      <div>
-        <div style="font-weight:bold; color:#059669; margin-bottom:8px; font-size:0.9em; border-bottom:2px solid #6ee7b7; padding-bottom:4px;">🔤 Nouns &amp; Verbs – שמות עצם ופעלים</div>
-        <table style="width:100%; border-collapse:collapse; font-size:0.88em;">
-          <tr style="background:#f0fdf4;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">building</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">בניין</td></tr>
-          <tr><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">market</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">שוק</td></tr>
-          <tr style="background:#f0fdf4;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">elephant</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">פיל</td></tr>
-          <tr><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">mountain</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">הר</td></tr>
-          <tr style="background:#f0fdf4;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">climb</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">לטפס</td></tr>
-        </table>
-      </div>
-      <div>
-        <div style="font-weight:bold; color:#ea580c; margin-bottom:8px; font-size:0.9em; border-bottom:2px solid #fdba74; padding-bottom:4px;">🔤 More Words – עוד מילים</div>
-        <table style="width:100%; border-collapse:collapse; font-size:0.88em;">
-          <tr style="background:#fff7ed;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">especially</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">במיוחד</td></tr>
-          <tr><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">million</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">מיליון</td></tr>
-          <tr style="background:#fff7ed;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">the past</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">העבר</td></tr>
-          <tr><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">food</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">אוכל</td></tr>
-          <tr style="background:#fff7ed;"><td style="padding:5px 8px; font-weight:bold; color:#1e3a5f;">line</td><td style="padding:5px 8px; text-align:right; direction:rtl; color:#1e3a5f;">טור לאכול</td></tr>
-        </table>
-      </div>
-    </div>
-    <div style="text-align:center; margin-top:10px; font-size:0.8em; color:#7c3aed;">💡 Use this list to help you! / השתמש ברשימה כעזר!</div>
-  </div>
+  <label>👤</label>
+  <input type="text" id="sFirst" placeholder="First Name" oninput="clearErr()">
+  <input type="text" id="sLast" placeholder="Last Name" oninput="clearErr()">
+  <span id="nameErr" style="color:#dc2626; font-size:0.82em; display:none;">Please write your name!</span>
 </div>
 
 <!-- KEY WORDS BOX -->
@@ -312,22 +265,82 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff;
     <div id="readScore" class="sec-score" style="color:#ea580c; display:none;"></div>
   </div>
 
-  <!-- WRITING -->
+
+
+  <!-- WORD ORDER -->
+  <div class="card card-order">
+    <div class="card-title">🔀 Word Order – Adjectives</div>
+    <div class="card-heb">סדר מילים – תארי שם</div>
+    <div class="instr">Choose the correct sentence! / בחר את המשפט הנכון!</div>
+    <div class="instr" style="font-size:0.8em; color:#9a3412; margin-bottom:10px;">💡 Remember: adjective comes BEFORE the noun! / זכור: התואר בא לפני שם העצם!</div>
+
+    <div class="order-pair">
+      <div class="qt"><span class="qnum">1.</span></div>
+      <div id="oq1-opts"></div>
+    </div>
+    <div class="order-pair">
+      <div class="qt"><span class="qnum">2.</span></div>
+      <div id="oq2-opts"></div>
+    </div>
+    <div class="order-pair">
+      <div class="qt"><span class="qnum">3.</span></div>
+      <div id="oq3-opts"></div>
+    </div>
+    <div class="order-pair">
+      <div class="qt"><span class="qnum">4.</span></div>
+      <div id="oq4-opts"></div>
+    </div>
+    <div class="order-pair">
+      <div class="qt"><span class="qnum">5.</span></div>
+      <div id="oq5-opts"></div>
+    </div>
+    <div class="order-pair">
+      <div class="qt"><span class="qnum">6.</span></div>
+      <div id="oq6-opts"></div>
+    </div>
+    <button class="check-btn btn-read" style="background:#ea580c;" onclick="checkSection('order')">✅ Check / בדוק</button>
+    <div id="orderScore" class="sec-score" style="color:#ea580c; display:none;"></div>
+  </div>
+
+</div>
+
+<!-- WRITING FULL WIDTH -->
+<div style="margin: 0 16px 16px;">
+<!-- WRITING -->
   <div class="card card-write">
     <div class="card-title">✏️ Writing – Translate to English</div>
     <div class="card-heb">כתיבה – תרגם לאנגלית</div>
     <div class="example-box">
       <strong>דוגמה / Example:</strong><br>
-      לאדי יש שיער חום. → <em>Adi has brown hair.</em> ✅
+      לאדי יש שיער חום. → <em>Adi has brown hair.</em> ✅<br><br>
+      <strong>❌ Negative / שלילי:</strong><br>
+      לאדי אין אופניים כחולים. → <em>Adi doesn't have a blue bike.</em><br>
+      לבן ולוורד אין כובע ורוד. → <em>Ben and Vered don't have a pink hat.</em>
     </div>
     <div class="instr-heb" style="margin-bottom:6px; font-size:0.88em; color:#166534;">קרא את המשפט בעברית וכתוב אותו באנגלית. השתמש בתיבת המילים!</div>
     <div class="instr" style="margin-bottom:10px;">Read the Hebrew sentence and write it in English. Use the word box!</div>
-    <div class="word-bank">
-      <strong>Names / שמות:</strong> Adi · Vered · Ben · Peter<br>
-      <strong>Adjectives / תארים:</strong> big · blue · brown · cold · huge · old · pink · small<br>
-      <strong>Nouns / שמות עצם:</strong> bike · box · drink · eyes · hair · hat · sandwich · T-shirt
+    <div style="overflow-x:auto; margin-bottom:10px;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.88em; text-align:center;">
+        <thead>
+          <tr style="background:#7c3aed; color:white;">
+            <th style="padding:7px 6px; border:1px solid #c4b5fd;">👤 Name<br><span style="font-size:0.82em; font-weight:normal;">שם</span></th>
+            <th style="padding:7px 6px; border:1px solid #c4b5fd;">🔧 Verb<br><span style="font-size:0.82em; font-weight:normal;">פועל</span></th>
+            <th style="padding:7px 6px; border:1px solid #c4b5fd;">🎨 Adjective<br><span style="font-size:0.82em; font-weight:normal;">תואר</span></th>
+            <th style="padding:7px 6px; border:1px solid #c4b5fd;">🔤 Noun<br><span style="font-size:0.82em; font-weight:normal;">שם עצם</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#faf5ff;">
+            <td style="padding:6px 8px; border:1px solid #e9d5ff; vertical-align:top; line-height:2.2;">Adi<br>Vered<br>Ben<br>Peter</td>
+            <td style="padding:6px 8px; border:1px solid #e9d5ff; vertical-align:top; line-height:2.2;">has<br>have<br>doesn't have<br>don't have</td>
+            <td style="padding:6px 8px; border:1px solid #e9d5ff; vertical-align:top; line-height:2.2;">big<br>blue<br>brown<br>cold<br>huge<br>old<br>pink<br>small</td>
+            <td style="padding:6px 8px; border:1px solid #e9d5ff; vertical-align:top; line-height:2.2;">bike<br>box<br>drink<br>eyes<br>hair<br>hat<br>sandwich<br>T-shirt</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
+    <div style="font-weight:bold; color:#166534; margin-bottom:6px;">✅ Positive / חיובי</div>
     <div class="qbox">
       <div class="qt" style="direction:rtl; text-align:right; color:#166534; font-size:1em; margin-bottom:6px;">לפיטר יש אופניים גדולים.</div>
       <input type="text" class="w-input" id="w1" placeholder="Write in English...">
@@ -337,15 +350,28 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff;
       <input type="text" class="w-input" id="w2" placeholder="Write in English...">
     </div>
     <div class="qbox">
-      <div class="qt" style="direction:rtl; text-align:right; color:#166634; font-size:1em; margin-bottom:6px;">לבן יש משקה קר.</div>
+      <div class="qt" style="direction:rtl; text-align:right; color:#166534; font-size:1em; margin-bottom:6px;">לבן יש משקה קר.</div>
       <input type="text" class="w-input" id="w3" placeholder="Write in English...">
+    </div>
+
+    <div style="font-weight:bold; color:#dc2626; margin:12px 0 6px;">❌ Negative / שלילי</div>
+    <div class="qbox">
+      <div class="qt" style="direction:rtl; text-align:right; color:#dc2626; font-size:1em; margin-bottom:6px;">לפיטר אין קופסה קטנה.</div>
+      <input type="text" class="w-input" id="w4" placeholder="Write in English...">
+    </div>
+    <div class="qbox">
+      <div class="qt" style="direction:rtl; text-align:right; color:#dc2626; font-size:1em; margin-bottom:6px;">לוורד אין שיער כחול.</div>
+      <input type="text" class="w-input" id="w5" placeholder="Write in English...">
+    </div>
+    <div class="qbox">
+      <div class="qt" style="direction:rtl; text-align:right; color:#dc2626; font-size:1em; margin-bottom:6px;">לבן ולפיטר אין כריך ישן.</div>
+      <input type="text" class="w-input" id="w6" placeholder="Write in English...">
     </div>
 
     <button class="check-btn btn-write" onclick="checkWriting()">🤖 Check with AI / בדוק עם AI</button>
     <div class="ai-loading" id="aiLoad">⏳ AI is checking... / AI בודק...</div>
     <div class="ai-box" id="aiBox"></div>
   </div>
-
 </div>
 
 <!-- SUBMIT -->
@@ -361,7 +387,7 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #f5f0ff;
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxam8NUu56tNuMmEyjuqTHUtRCRcr9LL9J2iqWAZEi_25oI6jMYW1pnN4MqHDUj6n5f/exec";
 const GAME_NAME  = "RTG Adjectives Choice Board";
 const picked = {};
-const secScores = { gram:null, vocab:null, read:null, match:null };
+const secScores = { gram:null, vocab:null, read:null, match:null, order:null };
 
 function shuffle(arr) {
   const a = [...arr];
@@ -382,6 +408,14 @@ const ALL_DATA = {
     {id:"vq2",correct:"quiet and empty", wrong:"noisy and full"  },
     {id:"vq3",correct:"quiet",           wrong:"closed"          },
     {id:"vq4",correct:"short",           wrong:"open"            },
+  ],
+  order: [
+    {id:"oq1", correct:"She has a big blue bike.",       wrong:"She has a blue bike big."},
+    {id:"oq2", correct:"He has a cold drink.",           wrong:"He has a drink cold."},
+    {id:"oq3", correct:"Vered has long brown hair.",     wrong:"Vered has hair long brown."},
+    {id:"oq4", correct:"They have a small pink hat.",    wrong:"They have a hat small pink."},
+    {id:"oq5", correct:"Ben and Peter have a huge sandwich.", wrong:"Ben and Peter have a sandwich huge."},
+    {id:"oq6", correct:"Ben and Vered have small pink hats.", wrong:"Ben and Vered have pink hats small."},
   ],
   read: [
     {id:"rq1",correct:"tall",                            wrong:"short"                           },
@@ -436,8 +470,8 @@ function checkSection(key){
   });
   secScores[key]=correct;
   const n=ALL_DATA[key].length;
-  const ids={gram:"gramScore",vocab:"vocabScore",read:"readScore"};
-  const labs={gram:"Grammar",vocab:"Vocabulary",read:"Reading"};
+  const ids={gram:"gramScore",vocab:"vocabScore",read:"readScore",order:"orderScore"};
+  const labs={gram:"Grammar",vocab:"Vocabulary",read:"Reading",order:"Word Order"};
   const el=document.getElementById(ids[key]);
   el.style.display="inline-block";
   el.textContent=labs[key]+": "+correct+"/"+n+" ✨";
@@ -570,10 +604,13 @@ const HEBREW_SENTENCES = [
   { he:"לפיטר יש אופניים גדולים.", expected:"Peter has a big bike." },
   { he:"לוורד יש כובע ורוד.",      expected:"Vered has a pink hat."  },
   { he:"לבן יש משקה קר.",          expected:"Ben has a cold drink."  },
+  { he:"לפיטר אין קופסה קטנה.",    expected:"Peter doesn't have a small box." },
+  { he:"לוורד אין שיער כחול.",     expected:"Vered doesn't have blue hair." },
+  { he:"לבן ולפיטר אין כריך ישן.", expected:"Ben and Peter don't have an old sandwich." },
 ];
 
 async function checkWriting(){
-  const inputs = ["w1","w2","w3"].map(id=>document.getElementById(id).value.trim());
+  const inputs = ["w1","w2","w3","w4","w5","w6"].map(id=>document.getElementById(id).value.trim());
   if(inputs.every(s=>s==="")){alert("!כתוב לפחות משפט אחד\nPlease write at least one sentence!");return;}
   document.getElementById("aiLoad").style.display="block";
   document.getElementById("aiBox").style.display="none";
@@ -621,21 +658,21 @@ async function checkWriting(){
 
 // ── TOTAL & SUBMIT ──
 function updateTotal(){
-  const t=(secScores.gram??0)+(secScores.vocab??0)+(secScores.read??0)+(secScores.match??0);
-  document.getElementById("totalDisp").textContent="Total: "+t+"/32 — "+Math.round(t/32*100)+"% 🎉";
+  const t=(secScores.gram??0)+(secScores.vocab??0)+(secScores.read??0)+(secScores.match??0)+(secScores.order??0);
+  document.getElementById("totalDisp").textContent="Total: "+t+"/38 — "+Math.round(t/38*100)+"% 🎉";
 }
 
 async function submitAll(){
-  const name=document.getElementById("sName").value.trim();
+  const name=(document.getElementById("sFirst").value.trim()+" "+document.getElementById("sLast").value.trim()).trim();
   if(!name){document.getElementById("nameErr").style.display="inline";document.getElementById("sName").focus();return;}
   const correct=(secScores.gram??0)+(secScores.vocab??0)+(secScores.read??0)+(secScores.match??0);
   const msg=document.getElementById("submitMsg");
   msg.style.color="#555";msg.textContent="⏳ Sending... / שולח...";
   try{
     await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({studentName:name,gameName:GAME_NAME,correct,total:32})});
+      body:JSON.stringify({studentName:name,gameName:GAME_NAME,correct,total:38})});
     msg.style.color="#16a34a";
-    msg.innerHTML="✅ <strong>Sent!</strong> "+name+": "+correct+"/32 ("+Math.round(correct/32*100)+"%) 🎊";
+    msg.innerHTML="✅ <strong>Sent!</strong> "+name+": "+correct+"/38 ("+Math.round(correct/38*100)+"%) 🎊";
   }catch(e){msg.style.color="#dc2626";msg.textContent="❌ Error. Try again.";}
 }
 
@@ -645,6 +682,7 @@ function clearErr(){document.getElementById("nameErr").style.display="none";}
 buildSection("gram");
 buildSection("vocab");
 buildSection("read");
+buildSection("order");
 buildMatchCard();
 updateTotal();
 </script>
